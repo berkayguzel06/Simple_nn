@@ -1,17 +1,20 @@
+
+
 import math
 
-
 class Node:
-    def __init__(self, data, _connect=()):
+    def __init__(self, data, _connect=(), _op='', label =''):
         self.data = data
         self.grad = 0.0
         self._prev = set(_connect)
         self._backward = lambda:None
+        self._op = _op
+        self.label = label
     def __repr__(self):
-        return f"Node ( Data = {self.data}, Grad = {self.grad} )\n"
+        return f"Node ( Label = {self.label}, Data = {self.data}, Grad = {self.grad} )\n"
     def __add__(self, node):
         node = node if isinstance(node, Node) else Node(node)
-        out = Node(self.data+node.data, (self, node))
+        out = Node(self.data+node.data, (self, node), '+')
         def _backward():
             self.grad += 1.0 * out.grad
             node.grad += 1.0 * out.grad
@@ -21,14 +24,14 @@ class Node:
         return self + node
     def __pow__(self,node):
         assert isinstance(node, (int, float)), 'only int/float'
-        out = Node(self.data**node, (self,))
+        out = Node(self.data**node, (self,), f'**{node}')
         def _backward():
             self.grad += node * (self.data ** (node-1)) * out.grad
         out._backward=_backward
         return out
     def __mul__(self, node):
         node = node if isinstance(node, Node) else Node(node)
-        out = Node(self.data*node.data, (self, node))
+        out = Node(self.data*node.data, (self, node), '*')
         def _backward():
             self.grad += node.data * out.grad
             node.grad += self.data * out.grad
@@ -44,7 +47,7 @@ class Node:
         return self + (-node)
     def exp(self):
         x = self.data
-        out = Node(math.exp(x),(self,))
+        out = Node(math.exp(x),(self,),'exp')
         def _backward():
             self.grad += out.data * out.grad
         out._backward=_backward
@@ -85,3 +88,5 @@ class Node:
         build_connections(self)
         for l in connections:
             print(l)
+
+

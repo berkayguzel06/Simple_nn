@@ -2,7 +2,6 @@ from nodegrad.nn import MultiLayerNodes
 
 n = MultiLayerNodes(3, [4,4,1])
 
-print("------------------------------")
 data = [
   [2.0, 3.0, -1.0],
   [3.0, -1.0, 0.5],
