@@ -24,7 +24,7 @@ This repository contains a straightforward neural network (NN) implemented in Py
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/simplenn.git
+   https://github.com/berkayguzel06/Simple_nn.git
    cd simplenn
 
 ## Usage
