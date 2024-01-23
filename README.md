@@ -1,70 +1,61 @@
-# Neural Network Framework
+# Simple Neural Network (simplenn)
 
-[Optional: Project Description]
+[![Python Version](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 
-## Table of Contents
-- [Introduction](#introduction)
-- [Features](#features)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-  - [Creating a Network](#creating-a-network)
-  - [Adding Layers](#adding-layers)
-  - [Training](#training)
-- [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
+A simple neural network implementation using Python.
 
-## Introduction
+## Overview
 
-This project is a simple neural network framework implemented in Python using the numpy library. It provides a basic structure for creating, configuring, and training neural networks.
-
-[Optional: Add a brief description of the project's purpose, goals, and features.]
+This repository contains a straightforward neural network (NN) implemented in Python. The neural network is designed for simplicity and serves for understanding the basics of neural networks, including layers, activations, loss functions, and optimizers.
 
 ## Features
 
-- Create and configure multi-layer neural networks
-- Implement various activation functions (Sigmoid, ReLU, Softmax, etc.)
-- Support multiple cost functions (Cross-Entropy, Quadratic, etc.)
-- Basic backpropagation algorithm for training
-- [Optional: Other notable features]
+- Customizable neural network architecture
+- Various activation functions and loss functions
+- Different optimizers (e.g., SGD, Adam, AdaGrad)
+- Easy-to-use interface for training, evaluating, and predicting
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
+- Python 3.x
 
-Before using this framework, you need to have the following installed:
-
-- Python (>=3.6)
-- numpy (>=1.0)
-
-### Installation
+## Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/neural-network-framework.git
-   cd neural-network-framework
+   git clone https://github.com/your-username/simplenn.git
+   cd simplenn
 
-Usage
-Creating a Network
-To create a neural network, import the Network class and instantiate it:
+## Usage
+1. Import the Model class and other necessary components from the simplenn package:
+   
+from simplenn.model import Model
+from simplenn.dense import Layer_Dense
+from simplenn.engine import ReLU, Softmax, Accuracy_Categorical, Categorical_Cross_Entropy, Adam
 
-from neural_network_framework import Network
+2. Create an instance of the Model class and define your neural network architecture:
 
-network = Network()
+  ```python
+  model = Model()
+  model.add(Layer_Dense(input_size, 16))
+  model.add(ReLU())
+  model.add(Layer_Dense(16, 3))
+  model.add(Softmax())
+  ```
 
-Adding Layers
-You can add layers to your network using the Layer class. Specify the number of input units and neurons in each layer, as well as the desired activation and cost functions:
-from neural_network_framework import Layer
-
-layer1 = Layer(inputs=input_size, neurons=hidden_size, activation='SigmoidFunction', cost='CrossEntropyCost')
-layer2 = Layer(inputs=hidden_size, neurons=output_size, activation='SoftmaxFunction', cost='CrossEntropyCost')
-
-Training
-Train your network using the fit method, passing input data and target labels:
-network.fit(input_data)
-
-
-Remember to replace placeholders like `[Optional: ...]` with your actual project information, descriptions, and links. You may also want to include additional sections like "Advanced Usage," "FAQ," or "Acknowledgments" depending on the scope and complexity of your project.
+3. Set the loss function, optimizer, and accuracy metric:
+```python
+model.set(
+    loss=Categorical_Cross_Entropy(),
+    optimizer=Adam(lr=0.005, decay=1e-7),
+    accuracy=Accuracy_Categorical()
+)
+```
+4. Finalize the model and train it on your data:
+```python
+model.finalize()
+model.train(data, target, epochs=1000, print_every=100, validation=(validation_data, validation_target))
+```
+## Examples
+Check the nnDemo.py script for an example of using the simplenn library on classification problems.
