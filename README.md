@@ -29,33 +29,33 @@ This repository contains a straightforward neural network (NN) implemented in Py
 
 ## Usage
 1. Import the Model class and other necessary components from the simplenn package:
-   
-from simplenn.model import Model
-from simplenn.dense import Layer_Dense
-from simplenn.engine import ReLU, Softmax, Accuracy_Categorical, Categorical_Cross_Entropy, Adam
-
+   ```python
+   from simplenn.model import Model
+   from simplenn.dense import Layer_Dense
+   from simplenn.engine import ReLU, Softmax, Accuracy_Categorical, Categorical_Cross_Entropy, Adam
+   ```
 2. Create an instance of the Model class and define your neural network architecture:
 
-  ```python
-  model = Model()
-  model.add(Layer_Dense(input_size, 16))
-  model.add(ReLU())
-  model.add(Layer_Dense(16, 3))
-  model.add(Softmax())
-  ```
+   ```python
+   model = Model()
+   model.add(Layer_Dense(input_size, 16))
+   model.add(ReLU())
+   model.add(Layer_Dense(16, 3))
+   model.add(Softmax())
+   ```
 
 3. Set the loss function, optimizer, and accuracy metric:
-```python
-model.set(
-    loss=Categorical_Cross_Entropy(),
-    optimizer=Adam(lr=0.005, decay=1e-7),
-    accuracy=Accuracy_Categorical()
-)
-```
+   ```python
+   model.set(
+      loss=Categorical_Cross_Entropy(),
+      optimizer=Adam(lr=0.005, decay=1e-7),
+      accuracy=Accuracy_Categorical()
+   )
+   ```
 4. Finalize the model and train it on your data:
-```python
-model.finalize()
-model.train(data, target, epochs=1000, print_every=100, validation=(validation_data, validation_target))
-```
+   ```python
+   model.finalize()
+   model.train(data, target, epochs=1000, print_every=100, validation=(validation_data, validation_target))
+   ```
 ## Examples
 Check the nnDemo.py script for an example of using the simplenn library on classification problems.
