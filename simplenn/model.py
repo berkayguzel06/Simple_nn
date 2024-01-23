@@ -1,5 +1,4 @@
-from simplenn.activation import Softmax
-from simplenn.loss import Categorical_Cross_Entropy, Activation_Softmax_Loss_CategoricalCrossentropy
+from simplenn.engine import Categorical_Cross_Entropy, Activation_Softmax_Loss_CategoricalCrossentropy, Softmax
 import pickle
 import copy
 import numpy as np

@@ -1,9 +1,6 @@
 from simplenn.model import Model
 from simplenn.dense import Layer_Dense, Layer_Dropout
-from simplenn.activation import ReLU, Softmax
-from simplenn.accuracy import Accuracy_Categorical, Accuracy_Regression
-from simplenn.loss import Categorical_Cross_Entropy, Mean_Square_Error
-from simplenn.optimizer import Adam, SGD
+from simplenn.engine import ReLU, Softmax, Accuracy_Categorical, Accuracy_Regression, Categorical_Cross_Entropy, Mean_Square_Error, Adam, SGD
 from sklearn.datasets import make_blobs, make_circles , make_moons
 from nnfs.datasets import sine_data, spiral_data, vertical_data
 import matplotlib.pyplot as plt
@@ -38,8 +35,8 @@ plt.subplot(2,3,6)
 plt.scatter(X, y, s=20, cmap='jet')
 plt.show()
 
-data, target = X5, y5
-validation_data, validation_target = X5_val, y5_val
+data, target = X4, y4
+validation_data, validation_target = X4_val, y4_val
 input_size = data.shape[1]
 print(f"Input shape: {data.shape}, Target shape: {target.shape}")
 print(f"Data size: {data.size}, Target size: {target.size}")
@@ -48,7 +45,7 @@ print(f"Input size: {input_size}, Output size: {target.shape}")
 model = Model()
 model.add(Layer_Dense(input_size,16))
 model.add(ReLU())
-model.add(Layer_Dense(16,3))
+model.add(Layer_Dense(16,2))
 model.add(Softmax())
 
 model.set(
@@ -57,6 +54,4 @@ model.set(
     accuracy = Accuracy_Categorical()
 )
 model.finalize()
-print(model.get_parameters())
-model.train(data, target, epochs=1000, print_every=100, batch_size=100, validation=(validation_data, validation_target))
-print(model.get_parameters())
+model.train(data, target, epochs=1000, print_every=100, validation=(validation_data, validation_target))
