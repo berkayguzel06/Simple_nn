@@ -3,12 +3,16 @@ from simplenn.loss import Categorical_Cross_Entropy, Activation_Softmax_Loss_Cat
 import pickle
 import copy
 import numpy as np
+import time
+
 class Model:
     def __init__(self):
         self.layers = []
         self.softmax_classifier = None
+
     def add(self, layer):
         self.layers.append(layer)
+
     def set(self,loss,optimizer,accuracy):
         if loss is not None:
             self.loss = loss
@@ -16,11 +20,13 @@ class Model:
             self.optimizer = optimizer
         if accuracy is not None:
             self.accuracy = accuracy
+
     def forward(self, X, training):
         self.input_layer.forward(X, training)
         for layer in self.layers:
             layer.forward(layer.prev.output, training)
         return layer.output
+    
     def backward(self, output, y):
         if self.softmax_classifier is not None:
             self.softmax_classifier.backward(output, y) 
@@ -50,6 +56,7 @@ class Model:
 
             if hasattr(self.layers[i], 'weights'):
                 self.trainable_layers.append(self.layers[i])
+
             if self.loss is not None:
                 self.loss.remember_trainable_layers(self.trainable_layers)
 
@@ -64,7 +71,6 @@ class Model:
             if validation_steps * batch_size < len(X_val):
                 validation_steps+=1
         
-
         self.loss.new_pass()
         self.accuracy.new_pass()
         for steps in range(validation_steps):
@@ -86,6 +92,7 @@ class Model:
                 f'loss: {validation_loss:.3f}')
         
     def train(self, X, y, epochs=1, batch_size=None, print_every=1, validation=None):
+        ttt = 0 # Total Train Time
         self.accuracy.addPrecision(y)
         train_Steps = 1
         if batch_size is not None:
@@ -94,6 +101,7 @@ class Model:
                 train_Steps+=1
         
         for epoch in range(1, epochs+1):
+            start = time.time()
             self.accuracy.new_pass()
             self.loss.new_pass()
             for steps in range(train_Steps):
@@ -122,6 +130,7 @@ class Model:
                 '''
             printable = (epoch % print_every)
             if printable==0 or epoch == epochs:
+                print("--------------------")
                 print(
                     f'epoch: {epoch}, ' + f'acc: {acc:.3f}, ' + f'loss: {loss:.3f} '
                     + f'lr: {self.optimizer.currentlr}'
@@ -129,6 +138,13 @@ class Model:
                 printable=0
             if validation is not None:
                 self.evaluate(*validation,printable,batch_size=batch_size)
+            stop = time.time()
+            sub = stop-start
+            ttt+=sub
+            if printable==0:
+                print(f"Time: {sub} s")
+                if epoch==epochs:
+                    print(f"Total Time: {ttt} s")
         
     def predict(self,X,batch_size=None):
         batch_X = 0
@@ -140,7 +156,7 @@ class Model:
         output = []
         for step in range(prediction_steps):
             if batch_size is None:
-                batch_x = X
+                batch_X = X
             else:
                 batch_X = X[step*batch_size:(step+1)*batch_size]
 

@@ -57,4 +57,6 @@ model.set(
     accuracy = Accuracy_Categorical()
 )
 model.finalize()
-model.train(data, target, epochs=1000, print_every=100,validation=(validation_data, validation_target))
+print(model.get_parameters())
+model.train(data, target, epochs=1000, print_every=100, batch_size=100, validation=(validation_data, validation_target))
+print(model.get_parameters())
