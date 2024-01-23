@@ -10,16 +10,17 @@ import matplotlib.pyplot as plt
 import nnfs
 
 nnfs.init()
+classes = 3
 X_val, y_val = sine_data(samples=100)
-X1_val, y1_val = vertical_data(samples=100,classes=3)
-X2_val, y2_val = spiral_data(samples=100,classes=3)
-X3_val, y3_val = make_moons(n_samples=100, noise=0.1)
+X1_val, y1_val = vertical_data(samples=100,classes=classes)
+X2_val, y2_val = spiral_data(samples=100,classes=classes)
+X3_val, y3_val = make_moons(n_samples=100, noise=0.2)
 X4_val, y4_val = make_circles(n_samples=100, noise=0.1)
 X5_val, y5_val = make_blobs(n_samples=100)
 
 X, y = sine_data(samples=1000)
-X1, y1 = vertical_data(samples=1000,classes=3)
-X2, y2 = spiral_data(samples=1000,classes=3)
+X1, y1 = vertical_data(samples=1000,classes=classes)
+X2, y2 = spiral_data(samples=1000,classes=classes)
 X3, y3 = make_moons(n_samples=1000, noise=0.25)
 X4, y4 = make_circles(n_samples=1000, noise=0.1)
 X5, y5 = make_blobs(n_samples=1000)
@@ -37,42 +38,23 @@ plt.subplot(2,3,6)
 plt.scatter(X, y, s=20, cmap='jet')
 plt.show()
 
-
-data = [
-  [2.0, 3.0, -1.0],
-  [3.0, -1.0, 0.5],
-  [0.5, 1.0, 1.0],
-  [1.0, 1.0, -1.0],
-]
-targets = [1.0, -1.0, -1.0, 1.0]
+data, target = X5, y5
+validation_data, validation_target = X5_val, y5_val
+input_size = data.shape[1]
+print(f"Input shape: {data.shape}, Target shape: {target.shape}")
+print(f"Data size: {data.size}, Target size: {target.size}")
+print(f"Input size: {input_size}, Output size: {target.shape}")
 
 model = Model()
-model.add(Layer_Dense(2,16))
+model.add(Layer_Dense(input_size,16))
 model.add(ReLU())
 model.add(Layer_Dense(16,3))
 model.add(Softmax())
 
 model.set(
     loss = Categorical_Cross_Entropy(),
-    optimizer = Adam(lr=0.05),
+    optimizer = Adam(lr=0.005, decay=1e-7),
     accuracy = Accuracy_Categorical()
 )
 model.finalize()
-model.train(X5, y5, epochs=1000, print_every=100,validation=(X5_val, y5_val))
-
-
-"""
-model2 = Model()
-model.add(Layer_Dense(1,64))
-model.add(ReLU())
-model.add(Layer_Dense(64,64))
-model.add(ReLU())
-model.add(Layer_Dense(64,1))
-model2.set(
-    loss = Mean_Square_Error(),
-    optimizer = Adam(lr=0.005,decay=1e-3),
-    accuracy = Accuracy_Regression()
-)
-model2.finalize()
-model2.train(X, y, epochs=1000, print_every=100, validation=(X_val, y_val))
-"""
+model.train(data, target, epochs=1000, print_every=100,validation=(validation_data, validation_target))
