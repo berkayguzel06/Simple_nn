@@ -57,7 +57,7 @@ class Model:
             self.softmax_classifier = Activation_Softmax_Loss_CategoricalCrossentropy()
 
                 
-    def evaluate(self, X_val, y_val,*,batch_size=None):
+    def evaluate(self, X_val, y_val,print_every,batch_size=None):
         validation_steps = 1
         if batch_size is not None:
             validation_steps = len(X_val) // batch_size
@@ -80,11 +80,11 @@ class Model:
             self.accuracy.calculate(predictions, batch_y)
         validation_loss = self.loss.calculate_accumulated()
         validation_accuracy = self.accuracy.calculate_accumulated()
-        print(f'validation, ' +
-            f'acc: {validation_accuracy:.3f}, ' +
-            f'loss: {validation_loss:.3f}')
-            
-
+        if print_every==0:
+                print(f'validation, ' +
+                f'acc: {validation_accuracy:.3f}, ' +
+                f'loss: {validation_loss:.3f}')
+        
     def train(self, X, y, epochs=1, batch_size=None, print_every=1, validation=None):
         self.accuracy.addPrecision(y)
         train_Steps = 1
@@ -94,7 +94,6 @@ class Model:
                 train_Steps+=1
         
         for epoch in range(1, epochs+1):
-            print(f'epoch: {epoch}')
             self.accuracy.new_pass()
             self.loss.new_pass()
             for steps in range(train_Steps):
@@ -114,26 +113,24 @@ class Model:
                 for layer in self.trainable_layers:
                     self.optimizer.update_params(layer)
                 self.optimizer.post_update_params()
-                if not steps % print_every or steps == train_Steps - 1:
+                '''
+                if (epoch % print_every)==1 or epoch == epochs - 1:
                     print(
                         f'step: {steps}, ' + f'acc: {acc:.3f}, ' + f'loss: {loss:.3f} '
-                        + f'(data loss: {data_loss:.3f} '
                         + f'lr: {self.optimizer.currentlr}'
                     )
-            epoch_data_loss = self.loss.calculate_accumulated()
-            epoch_loss = epoch_data_loss
-            epoch_accuracy = self.accuracy.calculate_accumulated()
-
-            print(f'training, ' +
-            f'acc: {epoch_accuracy:.3f}, ' +
-            f'loss: {epoch_loss:.3f} (' +
-            f'data_loss: {epoch_data_loss:.3f}, ' +
-            f'lr: {self.optimizer.currentlr}')
-
+                '''
+            printable = (epoch % print_every)
+            if printable==0 or epoch == epochs:
+                print(
+                    f'epoch: {epoch}, ' + f'acc: {acc:.3f}, ' + f'loss: {loss:.3f} '
+                    + f'lr: {self.optimizer.currentlr}'
+                )
+                printable=0
             if validation is not None:
-                self.evaluate(*validation,batch_size=batch_size)
+                self.evaluate(*validation,printable,batch_size=batch_size)
         
-    def predict(self,X,*,batch_size=None):
+    def predict(self,X,batch_size=None):
         batch_X = 0
         prediction_steps = 1
         if batch_size is not None:
