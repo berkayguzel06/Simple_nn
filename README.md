@@ -1,4 +1,4 @@
-# Simple Neural Network (simplenn)
+# Simple Neural Network (Simplenn)
 
 [![Python Version](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 
