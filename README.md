@@ -4,7 +4,7 @@
 
 ![output](https://github.com/berkayguzel06/Simple_nn/assets/98205992/7ccf776f-dcf1-4720-9c15-7b14fafda42e)
 
-A simple neural network implementation using Python.
+A simple neural network implementation using Python
 
 ## Overview
 
